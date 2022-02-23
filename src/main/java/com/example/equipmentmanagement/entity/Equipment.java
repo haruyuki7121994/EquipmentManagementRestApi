@@ -1,7 +1,12 @@
 package com.example.equipmentmanagement.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -10,129 +15,59 @@ import java.util.Objects;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Table(name = "equipments")
 public class Equipment {
-    private String id;
-    private String name;
-    private String qrcode;
-    private Integer status;
-    private Float width;
-    private Float height;
-    private Float range;
-    private Float resolution;
-    private Float weight;
-    private Date createdAt;
-    private Date lastdateMaintenance;
-
     @Id
     @Column(name = "id", nullable = false, length = 100)
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
+    private String id;
 
     @Basic
     @Column(name = "name", nullable = false, length = 255)
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
+    private String name;
 
     @Basic
     @Column(name = "qrcode", nullable = false, length = 255)
-    public String getQrcode() {
-        return qrcode;
-    }
-
-    public void setQrcode(String qrcode) {
-        this.qrcode = qrcode;
-    }
+    private String qrcode;
 
     @Basic
     @Column(name = "status", nullable = true)
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
+    private Integer status;
 
     @Basic
     @Column(name = "width", nullable = true, precision = 0)
-    public Float getWidth() {
-        return width;
-    }
-
-    public void setWidth(Float width) {
-        this.width = width;
-    }
+    private Float width;
 
     @Basic
     @Column(name = "height", nullable = true, precision = 0)
-    public Float getHeight() {
-        return height;
-    }
-
-    public void setHeight(Float height) {
-        this.height = height;
-    }
+    private Float height;
 
     @Basic
     @Column(name = "range", nullable = true, precision = 0)
-    public Float getRange() {
-        return range;
-    }
-
-    public void setRange(Float range) {
-        this.range = range;
-    }
+    private Float range;
 
     @Basic
     @Column(name = "resolution", nullable = true, precision = 0)
-    public Float getResolution() {
-        return resolution;
-    }
-
-    public void setResolution(Float resolution) {
-        this.resolution = resolution;
-    }
+    private Float resolution;
 
     @Basic
     @Column(name = "weight", nullable = true, precision = 0)
-    public Float getWeight() {
-        return weight;
-    }
-
-    public void setWeight(Float weight) {
-        this.weight = weight;
-    }
+    private Float weight;
 
     @Basic
     @Column(name = "created_at", nullable = true)
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
+    private Date createdAt;
 
     @Basic
     @Column(name = "lastdate_maintenance", nullable = true)
-    public Date getLastdateMaintenance() {
-        return lastdateMaintenance;
-    }
+    private Date lastdateMaintenance;
 
-    public void setLastdateMaintenance(Date lastdateMaintenance) {
-        this.lastdateMaintenance = lastdateMaintenance;
-    }
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "category_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+//    @JsonIgnore
+    private Category category;
 
     @Override
     public boolean equals(Object o) {

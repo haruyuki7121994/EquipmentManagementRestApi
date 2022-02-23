@@ -46,6 +46,9 @@ public class Category {
         isActive = active;
     }
 
+    @OneToMany(mappedBy="category")
+    private Set<Equipment> equipments;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

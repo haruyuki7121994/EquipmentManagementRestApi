@@ -58,6 +58,7 @@ public class EquipmentController {
             equipment.setRange(equipmentRequest.getRange());
             equipment.setResolution(equipmentRequest.getResolution());
             equipment.setWeight(equipmentRequest.getWeight());
+            equipment.setCategory(category);
             equipmentRepository.save(equipment);
             return ResponseEntity.ok(
                     new MessageResponse(
