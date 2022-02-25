@@ -11,6 +11,7 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import java.sql.Date;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @AllArgsConstructor
@@ -68,6 +69,12 @@ public class Equipment {
     @OnDelete(action = OnDeleteAction.CASCADE)
 //    @JsonIgnore
     private Category category;
+
+    @OneToMany(mappedBy="equipment")
+    private Set<Image> images;
+
+    @OneToMany(mappedBy="equipment")
+    private Set<Comment> comments;
 
     @Override
     public boolean equals(Object o) {

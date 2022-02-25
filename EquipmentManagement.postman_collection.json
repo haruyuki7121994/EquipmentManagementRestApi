@@ -1,0 +1,485 @@
+{
+	"info": {
+		"_postman_id": "3e00be76-af43-4bc5-ba92-9d7782806645",
+		"name": "EquipmentManagement",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"admin1\",\r\n    \"password\": \"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_host}}/auth/login",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"maintainer1\",\r\n    \"email\": \"maintainer@gmail.com\",\r\n    \"password\": \"123456\",\r\n    \"phone\": null,\r\n    \"address\": null,\r\n    \"role\": [\"maintainer\"]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_host}}/auth/register",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_host}}/auth/profile",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"auth",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Category",
+			"item": [
+				{
+					"name": "List",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_host}}/categories/all",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"categories",
+								"all"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "3",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_host}}/categories/{{category_id}}",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"categories",
+								"{{category_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"test cate\",\r\n    \"active\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_host}}/categories/create",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"categories",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"test cate 1\",\r\n    \"active\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_host}}/categories/{{category_id}}",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"categories",
+								"{{category_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_host}}/categories/{{category_id}}",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"categories",
+								"{{category_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Equipment",
+			"item": [
+				{
+					"name": "List",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_host}}/equipments/all",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"equipments",
+								"all"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "3",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "equipment2",
+									"type": "text"
+								},
+								{
+									"key": "width",
+									"value": "20",
+									"type": "text"
+								},
+								{
+									"key": "height",
+									"value": "20",
+									"type": "text"
+								},
+								{
+									"key": "weight",
+									"value": "20",
+									"type": "text"
+								},
+								{
+									"key": "range",
+									"value": "20",
+									"type": "text"
+								},
+								{
+									"key": "resolution",
+									"value": "20",
+									"type": "text"
+								},
+								{
+									"key": "category_id",
+									"value": "cate1",
+									"type": "text"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": [
+										"/C:/Users/haruy/Downloads/conceptERD.jpg",
+										"/C:/Users/haruy/Downloads/comment.jpg"
+									]
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_host}}/equipments/create",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"equipments",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CheckQRCode",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_host}}/equipments/qrcode/{{qr_code}}",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"equipments",
+								"qrcode",
+								"{{qr_code}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_host}}/equipments/{{equipment_id}}",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"equipments",
+								"{{equipment_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Image",
+			"item": [
+				{
+					"name": "Upload",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{api_host}}/storage/upload",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"storage",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "id",
+			"value": "cate1"
+		},
+		{
+			"key": "access_token",
+			"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbjEiLCJpYXQiOjE2NDU2MTkzMjUsImV4cCI6MTY0NTcwNTcyNX0.ZGsLF92WUZ2cZPBc7nzgAF_MAQqbYG258dpjWDDMScEUUi0fqMJm_iFwBYUKZV9XVm0h138l7DHhHCruN_f8iw"
+		},
+		{
+			"key": "qr_code",
+			"value": "equipment-1645619342556-equipment2"
+		},
+		{
+			"key": "api_host",
+			"value": "http://localhost:8080/api"
+		},
+		{
+			"key": "equipment_id",
+			"value": "equipment-1645745813211"
+		}
+	]
+}
