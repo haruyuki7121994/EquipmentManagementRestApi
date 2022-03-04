@@ -11,13 +11,14 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterRequest {
+public class UserRequest {
     private String id;
     private String username;
     private String email;
     private String phone;
     private String address;
     private String password;
+    private String rePassword;
     private Boolean active;
     private Set<String> role;
 }

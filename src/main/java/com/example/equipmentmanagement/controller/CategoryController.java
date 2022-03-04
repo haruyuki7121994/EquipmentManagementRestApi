@@ -44,6 +44,7 @@ public class CategoryController {
             metadata.put("currentPage", pageCates.getNumber());
             metadata.put("totalItems", pageCates.getTotalElements());
             metadata.put("totalPages", pageCates.getTotalPages());
+            metadata.put("size", pageCates.getSize());
 
             return ResponseEntity.ok(
                     new PagingMessageResponse(

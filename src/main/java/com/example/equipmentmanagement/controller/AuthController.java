@@ -73,6 +73,7 @@ public class AuthController {
         user.setPassword(encoder.encode(signUpRequest.getPassword()));
         user.setAddress(signUpRequest.getAddress());
         user.setPhone(signUpRequest.getPhone());
+        user.set_active(signUpRequest.getActive());
 
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
@@ -111,6 +112,7 @@ public class AuthController {
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),
+                userDetails.getActive(),
                 roles);
         return ResponseEntity.ok(
                 new MessageResponse(
@@ -138,7 +140,7 @@ public class AuthController {
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
         ProfileResponse profileRes = new ProfileResponse(userDetails.getId(), userDetails.getUsername(),
-                userDetails.getEmail(), userDetails.getPhone(), userDetails.getAddress(), roles);
+                userDetails.getEmail(), userDetails.getPhone(), userDetails.getAddress(), userDetails.getActive(), roles);
         return ResponseEntity.ok(
                 new MessageResponse(
                         HttpStatus.OK.value(),

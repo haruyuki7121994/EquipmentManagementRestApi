@@ -14,5 +14,6 @@ public class JWTResponse {
     private String type = "Bearer";
     private String id;
     private String username;
+    private Boolean active;
     private List<String> roles;
 }

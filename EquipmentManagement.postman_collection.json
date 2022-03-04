@@ -42,7 +42,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"maintainer1\",\r\n    \"email\": \"maintainer@gmail.com\",\r\n    \"password\": \"123456\",\r\n    \"phone\": null,\r\n    \"address\": null,\r\n    \"role\": [\"maintainer\"]\r\n}",
+							"raw": "{\r\n    \"username\": \"maintainer2\",\r\n    \"email\": \"maintainer2@gmail.com\",\r\n    \"password\": \"123456\",\r\n    \"phone\": null,\r\n    \"address\": null,\r\n    \"role\": [\"maintainer\"],\r\n    \"active\": true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -253,7 +253,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{api_host}}/equipments/all",
+							"raw": "{{api_host}}/equipments/all?size=3&keyword=3",
 							"host": [
 								"{{api_host}}"
 							],
@@ -264,8 +264,11 @@
 							"query": [
 								{
 									"key": "size",
-									"value": "3",
-									"disabled": true
+									"value": "3"
+								},
+								{
+									"key": "keyword",
+									"value": "3"
 								}
 							]
 						}
@@ -329,12 +332,7 @@
 										"/C:/Users/haruy/Downloads/comment.jpg"
 									]
 								}
-							],
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							]
 						},
 						"url": {
 							"raw": "{{api_host}}/equipments/create",
@@ -397,6 +395,75 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer  {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "width",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "height",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "weight",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "range",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "solution",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "category_id",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "{{api_host}}/equipments/{{equipment_id}}",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"equipments",
+								"{{equipment_id}}"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -432,6 +499,232 @@
 							"path": [
 								"storage",
 								"upload"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "List",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_host}}/users/all?size=3&role=maintainer",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"users",
+								"all"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "3"
+								},
+								{
+									"key": "role",
+									"value": "maintainer"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_host}}/users/{{user_id}}",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer  {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"aptech\",\r\n    \"email\": \"aptech@gmail.com\",\r\n    \"password\": \"123456\",\r\n    \"phone\": \"0338330044\",\r\n    \"address\": \"248 CMT8, p13, HCM\",\r\n    \"role\": [\"maintainer\"],\r\n    \"active\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_host}}/users/create",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"users",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer  {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"phone\": \"0338330044\",\r\n    \"address\": \"248 CMT8, p13, HCM\",\r\n    \"active\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_host}}/users/{{user_id}}",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer  {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_host}}/users/{{user_id}}",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comment",
+			"item": [
+				{
+					"name": "All",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer  {{access_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{api_host}}/comments/all?size=5",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"comments",
+								"all"
+							],
+							"query": [
+								{
+									"key": "size",
+									"value": "5"
+								},
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer  {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Comment 3\",\r\n    \"description\": \"Test comment\",\r\n    \"equipment_id\": \"equipment-1646237227290\",\r\n    \"user_id\": \"user-1646235583551\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_host}}/comments/create",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"comments",
+								"create"
 							]
 						}
 					},
@@ -480,6 +773,10 @@
 		{
 			"key": "equipment_id",
 			"value": "equipment-1645745813211"
+		},
+		{
+			"key": "user_id",
+			"value": "user-1646235516730"
 		}
 	]
 }

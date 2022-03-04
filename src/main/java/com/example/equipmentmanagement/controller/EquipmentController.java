@@ -37,12 +37,20 @@ public class EquipmentController {
     @GetMapping("/all")
     public ResponseEntity<?> all(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "") String keyword
     ) {
         try {
             List<Equipment> equipments;
             Pageable paging = PageRequest.of(page, size);
-            Page<Equipment> pageEquips = equipmentRepository.findAll(paging);
+            Page<Equipment> pageEquips;
+
+            if (!keyword.isEmpty()) {
+                pageEquips = equipmentRepository.getByNameContains(keyword, paging);
+            } else {
+                pageEquips = equipmentRepository.findAll(paging);
+            }
+
             equipments = pageEquips.getContent();
             Map<String, Object> response = new HashMap<>();
             response.put("equipments", equipments);
