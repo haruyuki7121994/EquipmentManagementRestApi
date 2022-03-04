@@ -33,3 +33,6 @@ equipmentManagement.aws.subFolder=em
 equipmentManagement.aws.bucketName=s3em712
 equipmentManagement.aws.accessKey=
 equipmentManagement.aws.secretKey=
+
+# Timezone
+spring.jackson.time-zone= Asia/Ho_Chi_Minh
