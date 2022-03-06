@@ -38,6 +38,9 @@ public class User {
     @Column(name = "is_active")
     private boolean is_active;
 
+    @Column(name = "avatar")
+    private String avatar;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "user_roles",

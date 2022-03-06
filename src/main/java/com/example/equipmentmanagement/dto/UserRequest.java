@@ -19,6 +19,7 @@ public class UserRequest {
     private String address;
     private String password;
     private String rePassword;
+    private String avatar;
     private Boolean active;
     private Set<String> role;
 }

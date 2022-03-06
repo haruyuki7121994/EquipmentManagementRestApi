@@ -1,5 +1,6 @@
 package com.example.equipmentmanagement.controller;
 
+import com.example.equipmentmanagement.aws.AmazonClient;
 import com.example.equipmentmanagement.dto.*;
 import com.example.equipmentmanagement.entity.ERole;
 import com.example.equipmentmanagement.entity.Role;
@@ -19,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -44,6 +46,9 @@ public class AuthController {
     AuthTokenFilter authTokenFilter;
     @Autowired
     UserDetailsServiceImpl userDetailsService;
+
+    @Autowired
+    private AmazonClient amazonClient;
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest signUpRequest) {
@@ -140,12 +145,141 @@ public class AuthController {
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
         ProfileResponse profileRes = new ProfileResponse(userDetails.getId(), userDetails.getUsername(),
-                userDetails.getEmail(), userDetails.getPhone(), userDetails.getAddress(), userDetails.getActive(), roles);
+                userDetails.getEmail(), userDetails.getPhone(), userDetails.getAddress(),
+                userDetails.getAvatar(), userDetails.getActive(), roles);
         return ResponseEntity.ok(
                 new MessageResponse(
                         HttpStatus.OK.value(),
                         "Get profile successful!",
                         profileRes
                 ));
+    }
+
+    @PostMapping("/edit/profile")
+    public ResponseEntity<?> changeProfile(HttpServletRequest request, @Valid @RequestBody UserRequest userRequest) {
+        String jwt = authTokenFilter.parseJwt(request);
+        if (jwt == null || !jwtUtils.validateJwtToken(jwt)) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse(
+                            HttpStatus.BAD_REQUEST.value(),
+                            "Invalid access token",
+                            null
+                    ));
+        }
+        String username = jwtUtils.getUserNameFromJwtToken(jwt);
+        try {
+            Optional<User> userOptional = userRepository.findByUsername(username);
+            if (userOptional.isEmpty()) {
+                return ResponseEntity.badRequest().body(
+                        new MessageResponse(
+                                HttpStatus.BAD_REQUEST.value(),
+                                "User not found",
+                                null
+                        )
+                );
+            }
+            User user = userOptional.get();
+            user.setAddress(userRequest.getAddress());
+            user.setPhone(userRequest.getPhone());
+            userRepository.save(user);
+            return ResponseEntity.badRequest().body(
+                    new MessageResponse(
+                            HttpStatus.OK.value(),
+                            "Update user successful!",
+                            null
+                    )
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
+
+    @PostMapping("/edit/password")
+    public ResponseEntity<?> changePassword(HttpServletRequest request, @Valid @RequestBody UserRequest userRequest) {
+        String jwt = authTokenFilter.parseJwt(request);
+        if (jwt == null || !jwtUtils.validateJwtToken(jwt)) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse(
+                            HttpStatus.BAD_REQUEST.value(),
+                            "Invalid access token",
+                            null
+                    ));
+        }
+        String username = jwtUtils.getUserNameFromJwtToken(jwt);try {
+            Optional<User> userOptional = userRepository.findByUsername(username);
+            if (userOptional.isEmpty()) {
+                return ResponseEntity.badRequest().body(
+                        new MessageResponse(
+                                HttpStatus.BAD_REQUEST.value(),
+                                "User not found",
+                                null
+                        )
+                );
+            }
+            if (!Objects.equals(userRequest.getPassword(), userRequest.getRePassword())) {
+                return ResponseEntity.badRequest().body(
+                        new MessageResponse(
+                                HttpStatus.BAD_REQUEST.value(),
+                                "Password not match!",
+                                null
+                        )
+                );
+            }
+            User user = userOptional.get();
+            user.setPassword(encoder.encode(userRequest.getPassword()));
+            userRepository.save(user);
+            return ResponseEntity.badRequest().body(
+                    new MessageResponse(
+                            HttpStatus.OK.value(),
+                            "Update password successful!",
+                            null
+                    )
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping("/edit/avatar")
+    public ResponseEntity<?> changeAvatar(HttpServletRequest request, @RequestPart(value = "file") MultipartFile file) {
+        String jwt = authTokenFilter.parseJwt(request);
+        if (jwt == null || !jwtUtils.validateJwtToken(jwt)) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse(
+                            HttpStatus.BAD_REQUEST.value(),
+                            "Invalid access token",
+                            null
+                    ));
+        }
+        String username = jwtUtils.getUserNameFromJwtToken(jwt);
+        try {
+            Optional<User> userOptional = userRepository.findByUsername(username);
+            if (userOptional.isEmpty()) {
+                return ResponseEntity.badRequest().body(
+                        new MessageResponse(
+                                HttpStatus.BAD_REQUEST.value(),
+                                "User not found",
+                                null
+                        )
+                );
+            }
+            User user = userOptional.get();
+            user.setAvatar(amazonClient.uploadFile(file));
+            userRepository.save(user);
+            return ResponseEntity.badRequest().body(
+                    new MessageResponse(
+                            HttpStatus.OK.value(),
+                            "Update avatar successful!",
+                            null
+                    )
+            );
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
     }
 }

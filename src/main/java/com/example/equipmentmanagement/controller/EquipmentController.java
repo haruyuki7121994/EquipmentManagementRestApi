@@ -185,15 +185,7 @@ public class EquipmentController {
 
         Equipment equipment = equipmentOptional.get();
         try {
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             String name = equipmentRequest.getName();
-            Slugify slg = new Slugify();
-            String slug = slg.slugify(name);
-            String qrcode = id + "-" + slug;
-
-            equipment.setId(id);
-            equipment.setQrcode(qrcode);
-            equipment.setCreatedAt(new java.sql.Date(timestamp.getTime()));
             equipment.setName(name);
             equipment.setHeight(equipmentRequest.getHeight());
             equipment.setWidth(equipmentRequest.getWidth());
@@ -233,6 +225,7 @@ public class EquipmentController {
                     )
             );
         } catch (Exception e) {
+//            return ResponseEntity.badRequest().body(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

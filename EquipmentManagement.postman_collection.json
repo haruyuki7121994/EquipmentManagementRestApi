@@ -42,7 +42,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"maintainer2\",\r\n    \"email\": \"maintainer2@gmail.com\",\r\n    \"password\": \"123456\",\r\n    \"phone\": null,\r\n    \"address\": null,\r\n    \"role\": [\"maintainer\"],\r\n    \"active\": true\r\n}",
+							"raw": "{\r\n    \"username\": \"maintainer3\",\r\n    \"email\": \"maintainer3@gmail.com\",\r\n    \"password\": \"123456\",\r\n    \"phone\": \"2/1/6 Binh Gia\",\r\n    \"address\": \"0338333333\",\r\n    \"role\": [\"maintainer\"],\r\n    \"active\": true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -81,6 +81,114 @@
 							"path": [
 								"auth",
 								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Profile",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer  {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"address\": \"248 CMT8\",\r\n    \"phone\": \"0338330044\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_host}}/auth/edit/profile",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"auth",
+								"edit",
+								"profile"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer  {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"123456\",\r\n    \"rePassword\": \"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_host}}/auth/edit/password",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"auth",
+								"edit",
+								"password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Avatar",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer  {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/C:/Users/haruy/Downloads/edit_equipment.png"
+								}
+							],
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_host}}/auth/edit/avatar",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"auth",
+								"edit",
+								"avatar"
 							]
 						}
 					},
@@ -253,7 +361,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{api_host}}/equipments/all?size=3&keyword=3",
+							"raw": "{{api_host}}/equipments/all?size=5&keyword=2",
 							"host": [
 								"{{api_host}}"
 							],
@@ -264,11 +372,11 @@
 							"query": [
 								{
 									"key": "size",
-									"value": "3"
+									"value": "5"
 								},
 								{
 									"key": "keyword",
-									"value": "3"
+									"value": "2"
 								}
 							]
 						}
