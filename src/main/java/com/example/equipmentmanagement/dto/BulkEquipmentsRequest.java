@@ -5,15 +5,19 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
+import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class EquipmentRequest {
+public class BulkEquipmentsRequest {
+    private Integer quantity;
+    private String type_qrcode;
+    private String prefix;
+    private Set<String> manual_qrcode;
     private String name;
     private Integer status;
-    private String qrcode;
     private Float width;
     private Float height;
     private Float range;

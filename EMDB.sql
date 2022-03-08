@@ -21,7 +21,7 @@ CREATE TABLE user_roles (
 
 CREATE TABLE categories (
     id varchar(100) PRIMARY KEY,
-	name varchar(255) not null,
+	name varchar(255) not null unique,
 	is_active bit default 0
 );
 
@@ -46,6 +46,8 @@ CREATE TABLE equipments (
 	range float(15),
 	resolution float(15),
 	weight float(15),
+	description text,
+	location text,
 	created_at datetime,
 	lastdate_maintenance date,
 	category_id varchar(100) FOREIGN KEY REFERENCES categories(id) ON DELETE CASCADE,
@@ -76,6 +78,21 @@ CREATE TABLE notifications (
 	created_at datetime,
 	maintenance_id varchar(100) FOREIGN KEY REFERENCES maintenances(id) ON DELETE CASCADE
 );
+
+create table bulk_equipment_logs
+(
+    id int identity
+        constraint bulk_equipment_logs_pk
+        primary key nonclustered,
+    quantity int not null,
+    created int not null,
+    status int default 0,
+    image_paths text,
+    data text not null,
+    created_at datetime not null,
+    completed_at datetime,
+    qrcode_list text not null
+)
 
 -----------SEED DATA----------------------
 INSERT INTO roles(name) VALUES('ROLE_ADMIN');

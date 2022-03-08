@@ -10,6 +10,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Objects;
 import java.util.Set;
 
@@ -31,6 +32,14 @@ public class Equipment {
     @Basic
     @Column(name = "qrcode", nullable = false, length = 255)
     private String qrcode;
+
+    @Basic
+    @Column(name = "description", nullable = true)
+    private String description;
+
+    @Basic
+    @Column(name = "location", nullable = true)
+    private String location;
 
     @Basic
     @Column(name = "status", nullable = true)
@@ -58,7 +67,7 @@ public class Equipment {
 
     @Basic
     @Column(name = "created_at", nullable = true)
-    private Date createdAt;
+    private Timestamp createdAt;
 
     @Basic
     @Column(name = "lastdate_maintenance", nullable = true)

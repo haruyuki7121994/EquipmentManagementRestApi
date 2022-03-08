@@ -173,12 +173,7 @@
 									"type": "file",
 									"src": "/C:/Users/haruy/Downloads/edit_equipment.png"
 								}
-							],
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
+							]
 						},
 						"url": {
 							"raw": "{{api_host}}/auth/edit/avatar",
@@ -435,10 +430,22 @@
 								{
 									"key": "images",
 									"type": "file",
-									"src": [
-										"/C:/Users/haruy/Downloads/conceptERD.jpg",
-										"/C:/Users/haruy/Downloads/comment.jpg"
-									]
+									"src": "/C:/Users/haruy/Downloads/add_equipment.png"
+								},
+								{
+									"key": "status",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "location",
+									"value": "abc",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "abc",
+									"type": "text"
 								}
 							]
 						},
@@ -557,6 +564,16 @@
 									"key": "images",
 									"type": "file",
 									"src": []
+								},
+								{
+									"key": "location",
+									"value": "",
+									"type": "text"
+								},
+								{
+									"key": "description",
+									"value": "",
+									"type": "text"
 								}
 							]
 						},
@@ -568,6 +585,122 @@
 							"path": [
 								"equipments",
 								"{{equipment_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Bulk Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{access_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "quantity",
+									"value": "100",
+									"type": "text"
+								},
+								{
+									"key": "type_qrcode",
+									"value": "auto",
+									"type": "text"
+								},
+								{
+									"key": "manual_qrcode",
+									"value": "",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "name",
+									"value": "Body Scale",
+									"type": "text"
+								},
+								{
+									"key": "status",
+									"value": "1",
+									"type": "text"
+								},
+								{
+									"key": "width",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "height",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "range",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "resolution",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "weight",
+									"value": "50",
+									"type": "text"
+								},
+								{
+									"key": "category_id",
+									"value": "cate2",
+									"type": "text"
+								},
+								{
+									"key": "images",
+									"type": "file",
+									"src": [
+										"/C:/Users/haruy/Downloads/export_qrcode.png",
+										"/C:/Users/haruy/Downloads/view_equipment.png",
+										"/C:/Users/haruy/Downloads/search_equipment.png"
+									]
+								},
+								{
+									"key": "description",
+									"value": "abc",
+									"type": "text"
+								},
+								{
+									"key": "location",
+									"value": "abc",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{api_host}}/equipments/bulk-create",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"equipments",
+								"bulk-create"
+							],
+							"query": [
+								{
+									"key": "quantity",
+									"value": "10",
+									"disabled": true
+								},
+								{
+									"key": "type_qrcode",
+									"value": "auto",
+									"disabled": true
+								}
 							]
 						}
 					},
