@@ -40,6 +40,5 @@ public class Comment {
     @JoinColumn(name = "user_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @ToString.Exclude
-    @JsonIgnore
     private User user;
 }
