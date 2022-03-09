@@ -28,7 +28,7 @@ public class NotificationController {
 
     @PostMapping("/create")
     public ResponseEntity<?> create(@Valid @RequestBody NotificationRequest notificationRequest) {
-        Optional<Maintenance> maintenanceOptional = maintenanceRepository.findById(notificationRequest.getId());
+        Optional<Maintenance> maintenanceOptional = maintenanceRepository.findById(notificationRequest.getMaintenance_id());
         if (maintenanceOptional.isEmpty()) {
             return responseService.badRequest("Maintenance not found");
         }
@@ -38,14 +38,15 @@ public class NotificationController {
             Notification notification = new Notification();
             notification.setId(timestamp.getTime() + "-notification");
             notification.setRead(false);
-            notification.setTitle(notification.getTitle());
-            notification.setDescription(notification.getDescription());
+            notification.setTitle(notificationRequest.getTitle());
+            notification.setDescription(notificationRequest.getDescription());
             notification.setCreatedAt(new Date(timestamp.getTime()));
             notification.setMaintenance(maintenance);
             repository.save(notification);
             return responseService.success("Create successful!", notification);
         } catch (Exception e) {
-            return responseService.serverError();
+            return responseService.badRequest(e.getMessage());
+//            return responseService.serverError();
         }
     }
 }

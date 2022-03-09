@@ -10,9 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class NotificationRequest {
-    private String id;
     private String title;
     private String description;
-    private Boolean read;
     private String maintenance_id;
 }
