@@ -183,7 +183,7 @@ public class AuthController {
             user.setAddress(userRequest.getAddress());
             user.setPhone(userRequest.getPhone());
             userRepository.save(user);
-            return ResponseEntity.badRequest().body(
+            return ResponseEntity.ok(
                     new MessageResponse(
                             HttpStatus.OK.value(),
                             "Update user successful!",
@@ -231,7 +231,7 @@ public class AuthController {
             User user = userOptional.get();
             user.setPassword(encoder.encode(userRequest.getPassword()));
             userRepository.save(user);
-            return ResponseEntity.badRequest().body(
+            return ResponseEntity.ok(
                     new MessageResponse(
                             HttpStatus.OK.value(),
                             "Update password successful!",
@@ -270,7 +270,7 @@ public class AuthController {
             User user = userOptional.get();
             user.setAvatar(amazonClient.uploadFile(file));
             userRepository.save(user);
-            return ResponseEntity.badRequest().body(
+            return ResponseEntity.ok(
                     new MessageResponse(
                             HttpStatus.OK.value(),
                             "Update avatar successful!",
