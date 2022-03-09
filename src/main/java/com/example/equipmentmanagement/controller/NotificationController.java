@@ -37,6 +37,7 @@ public class NotificationController {
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             Notification notification = new Notification();
             notification.setId(timestamp.getTime() + "-notification");
+            notification.setRead(false);
             notification.setTitle(notification.getTitle());
             notification.setDescription(notification.getDescription());
             notification.setCreatedAt(new Date(timestamp.getTime()));
