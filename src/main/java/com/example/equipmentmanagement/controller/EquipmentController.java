@@ -49,7 +49,8 @@ public class EquipmentController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "id-desc") String orderBy,
-            @RequestParam(defaultValue = "") String keyword
+            @RequestParam(defaultValue = "") String keyword,
+            @RequestParam(defaultValue = "") String maintenance
     ) {
         try {
             List<Equipment> equipments;
@@ -61,7 +62,11 @@ public class EquipmentController {
             );
 
             Page<Equipment> pageEquips;
-            pageEquips = equipmentRepository.findAllByNameContainsOrQrcodeContains(keyword, keyword, paging);
+            if (maintenance.equals("isNull")) {
+                pageEquips = equipmentRepository.getByQrcodeContainsAndMaintenanceIsNull(keyword, paging);
+            } else {
+                pageEquips = equipmentRepository.findAllByNameContainsOrQrcodeContains(keyword, keyword, paging);
+            }
 
             equipments = pageEquips.getContent();
             Map<String, Object> response = new HashMap<>();

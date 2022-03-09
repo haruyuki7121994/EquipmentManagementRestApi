@@ -1,10 +1,7 @@
 package com.example.equipmentmanagement.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -84,6 +81,13 @@ public class Equipment {
 
     @OneToMany(mappedBy="equipment")
     private Set<Comment> comments;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "maintenance_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    @ToString.Exclude
+    private Maintenance maintenance;
 
     @Override
     public boolean equals(Object o) {
