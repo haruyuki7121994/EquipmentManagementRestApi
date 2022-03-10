@@ -20,7 +20,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -43,6 +45,8 @@ public class MaintenanceController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "id-desc") String orderBy,
+            @RequestParam(defaultValue = "") String startDate,
+            @RequestParam(defaultValue = "") String endDate,
             @RequestParam(defaultValue = "") String username
     ) {
         try {
@@ -55,17 +59,23 @@ public class MaintenanceController {
             );
 
             Page<Maintenance> pageMaintenance;
-            if (username.isEmpty()) {
-                pageMaintenance = repository.findAll(paging);
-            }else {
-                Optional<User> maintainerOptional = userRepository.findByUsername(username);
-                if (maintainerOptional.isEmpty()) {
+            Optional<User> maintainerOptional = userRepository.findByUsername(username);
+            if (maintainerOptional.isPresent()) {
+                User user = maintainerOptional.get();
+                pageMaintenance = repository.getByUser(user, paging);
+            } else {
+                if (startDate.isEmpty() || endDate.isEmpty()) {
                     pageMaintenance = repository.findAll(paging);
                 } else {
-                    User user = maintainerOptional.get();
-                    pageMaintenance = repository.getByUser(user, paging);
+                    pageMaintenance = repository.findAllByDateMaintenanceGreaterThanEqualAndDateMaintenanceLessThanEqual(
+                            new Date(new SimpleDateFormat("yyyy-MM-dd").parse(startDate).getTime()),
+                            new Date(new SimpleDateFormat("yyyy-MM-dd").parse(endDate).getTime()),
+                            paging
+                    );
                 }
+
             }
+
             Map<String, Object> response = new HashMap<>();
             response.put("maintenances", pageMaintenance.getContent());
 
@@ -140,7 +150,38 @@ public class MaintenanceController {
                 equipment.setMaintenance(maintenance);
                 equipmentRepository.save(equipment);
             }
+            maintenance.setStatus(1);
+            repository.save(maintenance);
             return responseService.success("Add equipments successful!", null);
+        } catch (Exception e) {
+//            return responseService.badRequest(e.getMessage());
+            return responseService.serverError();
+        }
+    }
+
+    @PostMapping("/{id}/remove-equipments")
+    public ResponseEntity<?> removeEquipments(@PathVariable("id") String id, @Valid @RequestBody MaintenanceRequest maintenanceRequest) {
+        Optional<Maintenance> maintenanceOptional = repository.findById(id);
+        if (maintenanceOptional.isEmpty()) {
+            return responseService.notFound();
+        }
+
+        Maintenance maintenance = maintenanceOptional.get();
+        try {
+            int count = 0;
+            for (String qrcode : maintenanceRequest.getEquipmentListQrcode()) {
+                Optional<Equipment> equipmentOptional = equipmentRepository.findByQrcode(qrcode);
+                if (equipmentOptional.isEmpty()) continue;
+                Equipment equipment = equipmentOptional.get();
+                equipment.setMaintenance(null);
+                equipmentRepository.save(equipment);
+                count ++;
+            }
+            if (count == maintenance.getEquipments().size()) {
+                maintenance.setStatus(0);
+                repository.save(maintenance);
+            }
+            return responseService.success("Remove equipments successful!", null);
         } catch (Exception e) {
             return responseService.badRequest(e.getMessage());
 //            return responseService.serverError();

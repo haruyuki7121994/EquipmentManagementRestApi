@@ -1,5 +1,6 @@
 package com.example.equipmentmanagement.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -48,4 +49,8 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id")
     )
     private Set<Role> roles = new HashSet<>();
+
+    @OneToMany(mappedBy="user")
+    @JsonIgnore
+    private Set<Maintenance> maintenances;
 }

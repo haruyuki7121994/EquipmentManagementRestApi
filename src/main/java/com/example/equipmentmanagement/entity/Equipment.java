@@ -82,9 +82,8 @@ public class Equipment {
     @OneToMany(mappedBy="equipment")
     private Set<Comment> comments;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "maintenance_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "maintenance_id")
     @JsonIgnore
     @ToString.Exclude
     private Maintenance maintenance;

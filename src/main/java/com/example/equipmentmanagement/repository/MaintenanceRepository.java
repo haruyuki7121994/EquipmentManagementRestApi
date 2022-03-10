@@ -6,6 +6,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.sql.Date;
+
 public interface MaintenanceRepository extends JpaRepository<Maintenance, String> {
+    Page<Maintenance> findAllByDateMaintenanceGreaterThanEqualAndDateMaintenanceLessThanEqual(Date dateMaintenance, Date dateMaintenance2, Pageable pageable);
     Page<Maintenance> getByUser(User user, Pageable pageable);
 }

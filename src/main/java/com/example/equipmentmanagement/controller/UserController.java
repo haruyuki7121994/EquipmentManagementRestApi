@@ -2,10 +2,12 @@ package com.example.equipmentmanagement.controller;
 
 import com.example.equipmentmanagement.dto.*;
 import com.example.equipmentmanagement.entity.ERole;
+import com.example.equipmentmanagement.entity.Maintenance;
 import com.example.equipmentmanagement.entity.Role;
 import com.example.equipmentmanagement.entity.User;
 import com.example.equipmentmanagement.repository.RoleRepository;
 import com.example.equipmentmanagement.repository.UserRepository;
+import com.example.equipmentmanagement.service.ResponseImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,22 +31,26 @@ public class UserController {
     RoleRepository roleRepository;
     @Autowired
     PasswordEncoder encoder;
+    @Autowired
+    ResponseImpl responseService;
 
     @GetMapping("/all")
     public ResponseEntity<?> all(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
-            @RequestParam(defaultValue = "all") String role
+            @RequestParam(defaultValue = "all") String role,
+            @RequestParam(defaultValue = "") String keyword
     ) {
         try {
             List<User> users;
             Page<User> pageUsers;
             Pageable paging = PageRequest.of(page, size);
+            keyword = "%" + keyword + "%";
             if (role.equals("maintainer")) {
-                pageUsers = repository.getByRole("ROLE_MAINTAINER", paging);
+                pageUsers = repository.getByRole("ROLE_MAINTAINER", keyword, paging);
             }
             else if (role.equals("admin")) {
-                pageUsers = repository.getByRole("ROLE_ADMIN", paging);
+                pageUsers = repository.getByRole("ROLE_ADMIN", keyword, paging);
             }
             else {
                 pageUsers = repository.findAll(paging);
@@ -167,15 +173,19 @@ public class UserController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") String id) {
+        Optional<User> userOptional = repository.findById(id);
+        if (userOptional.isEmpty()) {
+            return responseService.notFound();
+        }
+
         try {
-            repository.deleteById(id);
-            return ResponseEntity.ok(
-                    new MessageResponse(
-                            HttpStatus.OK.value(),
-                            "Delete successful!",
-                            null
-                    )
-            );
+            User user = userOptional.get();
+
+            Set<Maintenance> maintenances = user.getMaintenances();
+            if (maintenances.size() > 0) return responseService.badRequest("Delete failed!");
+
+            repository.delete(user);
+            return responseService.success("Delete successful!", null);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
