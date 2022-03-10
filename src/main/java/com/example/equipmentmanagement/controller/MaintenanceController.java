@@ -42,7 +42,8 @@ public class MaintenanceController {
     public ResponseEntity<?> all(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
-            @RequestParam(defaultValue = "id-desc") String orderBy
+            @RequestParam(defaultValue = "id-desc") String orderBy,
+            @RequestParam(defaultValue = "") String username
     ) {
         try {
             List<Maintenance> maintenances;
@@ -53,7 +54,18 @@ public class MaintenanceController {
                     parts[1].equals("desc") ? Sort.by(parts[0]).descending() : Sort.by(parts[0]).ascending()
             );
 
-            Page<Maintenance> pageMaintenance = repository.findAll(paging);
+            Page<Maintenance> pageMaintenance;
+            if (username.isEmpty()) {
+                pageMaintenance = repository.findAll(paging);
+            }else {
+                Optional<User> maintainerOptional = userRepository.findByUsername(username);
+                if (maintainerOptional.isEmpty()) {
+                    pageMaintenance = repository.findAll(paging);
+                } else {
+                    User user = maintainerOptional.get();
+                    pageMaintenance = repository.getByUser(user, paging);
+                }
+            }
             Map<String, Object> response = new HashMap<>();
             response.put("maintenances", pageMaintenance.getContent());
 
