@@ -198,8 +198,10 @@ public class MaintenanceController {
             } else {
                 Maintenance maintenance = maintenanceOptional.get();
                 Set<Equipment> equipmentSet = maintenance.getEquipments();
-                if (equipmentSet.size() > 0) {
-                    return responseService.badRequest("Cannot Delete!");
+                for (Equipment e :
+                        equipmentSet) {
+                    e.setMaintenance(null);
+                    equipmentRepository.save(e);
                 }
 
                 repository.deleteById(id);

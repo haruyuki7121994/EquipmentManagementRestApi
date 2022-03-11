@@ -11,12 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
@@ -39,12 +39,28 @@ public class CommentController {
     @GetMapping("/all")
     public ResponseEntity<?> all(
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size
+            @RequestParam(defaultValue = "5") int size,
+            @RequestParam(defaultValue = "id-desc") String orderBy,
+            @RequestParam(defaultValue = "") String username
     ) {
         try {
             List<Comment> comments;
-            Pageable paging = PageRequest.of(page, size);
-            Page<Comment> pageComments = repository.findAll(paging);
+
+            String[] parts = orderBy.split("-");
+            Pageable paging = PageRequest.of(
+                    page, size,
+                    parts[1].equals("desc") ? Sort.by(parts[0]).descending() : Sort.by(parts[0]).ascending()
+            );
+
+            Page<Comment> pageComments;
+            Optional<User> userOptional = userRepository.findByUsername(username);
+            if (userOptional.isEmpty()) {
+                pageComments = repository.findAll(paging);
+            } else {
+                User user = userOptional.get();
+                pageComments = repository.getByUser(user, paging);
+            }
+
             comments = pageComments.getContent();
             Map<String, Object> response = new HashMap<>();
             response.put("comments", comments);

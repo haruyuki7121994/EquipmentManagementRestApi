@@ -80,7 +80,7 @@ public class BulkEquipmentService implements BulkEquipmentImpl{
                     request.setDescription((String) data.get("description"));
                     request.setLocation((String) data.get("location"));
                     Equipment rs = equipmentService.handleSave(request, category);
-                    if (rs != null) {
+                    if (rs != null && images != null) {
                         images.forEach(img -> imageService.handleSave(rs, img));
                         count.incrementAndGet();
                     }

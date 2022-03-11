@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -39,22 +40,33 @@ public class UserController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "all") String role,
+            @RequestParam(defaultValue = "id-desc") String orderBy,
             @RequestParam(defaultValue = "") String keyword
     ) {
         try {
             List<User> users;
             Page<User> pageUsers;
-            Pageable paging = PageRequest.of(page, size);
+            String[] parts = orderBy.split("-");
+            Pageable paging = PageRequest.of(
+                    page, size,
+                    parts[1].equals("desc") ? Sort.by(parts[0]).descending() : Sort.by(parts[0]).ascending()
+            );
             keyword = "%" + keyword + "%";
-            if (role.equals("maintainer")) {
-                pageUsers = repository.getByRole("ROLE_MAINTAINER", keyword, paging);
+            switch (role) {
+                case "maintainer":
+                    pageUsers = repository.getByRole("ROLE_MAINTAINER", keyword, paging);
+                    break;
+                case "admin":
+                    pageUsers = repository.getByRole("ROLE_ADMIN", keyword, paging);
+                    break;
+                case "guest":
+                    pageUsers = repository.getByRole("ROLE_GUEST", keyword, paging);
+                    break;
+                default:
+                    pageUsers = repository.findAll(paging);
+                    break;
             }
-            else if (role.equals("admin")) {
-                pageUsers = repository.getByRole("ROLE_ADMIN", keyword, paging);
-            }
-            else {
-                pageUsers = repository.findAll(paging);
-            }
+
             users = pageUsers.getContent();
             Map<String, Object> response = new HashMap<>();
             response.put("users", users);
@@ -123,6 +135,7 @@ public class UserController {
             user.setPassword(encoder.encode(registerRequest.getPassword()));
             user.setAddress(registerRequest.getAddress());
             user.setPhone(registerRequest.getPhone());
+            user.set_active(registerRequest.getActive());
 
             Set<String> strRoles = registerRequest.getRole();
             Set<Role> roles = new HashSet<>();
