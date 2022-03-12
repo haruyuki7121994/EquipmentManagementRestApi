@@ -7,7 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 public interface NotificationRepository extends JpaRepository<Notification, String> {
     @Query(value = "select n.* from notifications n join maintenances m on n.maintenance_id = m.id join users u on u.id = m.user_id where u.username = :username", nativeQuery = true)
-    Page<Notification> getByUsername(@Param("username") String username, Pageable pageable);
+    List<Notification> getByUsername(@Param("username") String username);
 }

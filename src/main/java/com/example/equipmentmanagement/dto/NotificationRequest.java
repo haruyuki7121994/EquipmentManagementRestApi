@@ -13,4 +13,5 @@ public class NotificationRequest {
     private String title;
     private String description;
     private String maintenance_id;
+    private String username;
 }

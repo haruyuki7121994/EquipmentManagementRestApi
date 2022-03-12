@@ -57,7 +57,7 @@ public class NotificationController {
             if (username.isEmpty()) {
                 pageNotification = repository.findAll(paging);
             } else {
-                pageNotification = repository.getByUsername(username, paging);
+                return responseService.success("Get successful!", repository.getByUsername(username));
             }
 
 
@@ -95,5 +95,16 @@ public class NotificationController {
             return responseService.badRequest(e.getMessage());
 //            return responseService.serverError();
         }
+    }
+
+    @PostMapping("/update-all")
+    public ResponseEntity<?> updateAll(@Valid @RequestBody NotificationRequest notificationRequest) {
+        List<Notification> notifications = repository.getByUsername(notificationRequest.getUsername());
+        for (Notification notification :
+                notifications) {
+            notification.setRead(true);
+            repository.save(notification);
+        }
+        return responseService.success("Update successful!", null);
     }
 }
