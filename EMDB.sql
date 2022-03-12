@@ -94,6 +94,16 @@ create table bulk_equipment_logs
     qrcode_list text not null
 )
 
+create table codes
+(
+    id int identity
+        constraint codes_pk
+        primary key nonclustered,
+    code varchar(255) not null,
+    used bit default 0,
+    user_id varchar(100) FOREIGN KEY REFERENCES users(id) ON DELETE CASCADE
+)
+
 -----------SEED DATA----------------------
 INSERT INTO roles(name) VALUES('ROLE_ADMIN');
 INSERT INTO roles(name) VALUES('ROLE_MAINTAINER');

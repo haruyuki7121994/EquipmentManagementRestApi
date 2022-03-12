@@ -15,7 +15,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"admin1\",\r\n    \"password\": \"123456\"\r\n}",
+							"raw": "{\r\n    \"username\": \"maintainer4\",\r\n    \"password\": \"123\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -42,7 +42,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"username\": \"maintainer3\",\r\n    \"email\": \"maintainer3@gmail.com\",\r\n    \"password\": \"123456\",\r\n    \"phone\": \"2/1/6 Binh Gia\",\r\n    \"address\": \"0338333333\",\r\n    \"role\": [\"maintainer\"],\r\n    \"active\": true\r\n}",
+							"raw": "{\r\n    \"username\": \"maintainer4\",\r\n    \"email\": \"yogij65101@tourcc.com\",\r\n    \"password\": \"123456\",\r\n    \"phone\": \"2/1/6 Binh Gia\",\r\n    \"address\": \"0338333333\",\r\n    \"role\": [\"maintainer\"],\r\n    \"active\": true\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -184,6 +184,69 @@
 								"auth",
 								"edit",
 								"avatar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send Code Forgot Password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer  {{access_token}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"yogij65101@tourcc.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_host}}/auth/forgot-password/send",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"auth",
+								"forgot-password",
+								"send"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Verify and Change Password",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"yogij65101@tourcc.com\",\r\n    \"code\": \"093289\",\r\n    \"newPassword\": \"123\",\r\n    \"rePassword\": \"123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_host}}/auth/forgot-password/verify",
+							"host": [
+								"{{api_host}}"
+							],
+							"path": [
+								"auth",
+								"forgot-password",
+								"verify"
 							]
 						}
 					},
@@ -951,7 +1014,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"Comment 3\",\r\n    \"description\": \"Test comment\",\r\n    \"equipment_id\": \"equipment-1646237227290\",\r\n    \"user_id\": \"user-1646235583551\"\r\n}",
+							"raw": "{\r\n    \"title\": \"Comment 3\",\r\n    \"description\": \"Test comment\",\r\n    \"equipment_id\": \"1646919216433-emBkXY\",\r\n    \"user_id\": \"user-1646897651638\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -988,7 +1051,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{api_host}}/notifications/all?username=aptech",
+							"raw": "{{api_host}}/notifications/all?username=aptech&size=1000&page=0",
 							"host": [
 								"{{api_host}}"
 							],
@@ -1000,6 +1063,14 @@
 								{
 									"key": "username",
 									"value": "aptech"
+								},
+								{
+									"key": "size",
+									"value": "1000"
+								},
+								{
+									"key": "page",
+									"value": "0"
 								}
 							]
 						}
@@ -1023,7 +1094,7 @@
 							}
 						],
 						"url": {
-							"raw": "{{api_host}}/maintenances/all?size=5&page=0&orderBy=dateMaintenance-desc",
+							"raw": "{{api_host}}/maintenances/all?size=1000&page=0&orderBy=dateMaintenance-asc&username=aptech",
 							"host": [
 								"{{api_host}}"
 							],
@@ -1034,7 +1105,7 @@
 							"query": [
 								{
 									"key": "size",
-									"value": "5"
+									"value": "1000"
 								},
 								{
 									"key": "page",
@@ -1042,12 +1113,11 @@
 								},
 								{
 									"key": "orderBy",
-									"value": "dateMaintenance-desc"
+									"value": "dateMaintenance-asc"
 								},
 								{
 									"key": "username",
-									"value": "aptech",
-									"disabled": true
+									"value": "aptech"
 								}
 							]
 						}

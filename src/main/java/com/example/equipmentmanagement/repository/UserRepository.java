@@ -11,6 +11,7 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, String> {
     Optional<User> findByUsername(String username);
+    Optional<User> findByEmail(String email);
     Boolean existsByUsername(String username);
     Boolean existsByEmail(String email);
     @Query(value = "select u.* from users u join user_roles ur on ur.user_id = u.id join roles r on r.id = ur.role_id where r.name = :role and (email like :keyword or username like :keyword)", nativeQuery = true)

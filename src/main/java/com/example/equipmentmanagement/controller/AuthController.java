@@ -2,15 +2,20 @@ package com.example.equipmentmanagement.controller;
 
 import com.example.equipmentmanagement.aws.AmazonClient;
 import com.example.equipmentmanagement.dto.*;
+import com.example.equipmentmanagement.entity.Code;
 import com.example.equipmentmanagement.entity.ERole;
 import com.example.equipmentmanagement.entity.Role;
 import com.example.equipmentmanagement.entity.User;
 import com.example.equipmentmanagement.jwt.AuthTokenFilter;
 import com.example.equipmentmanagement.jwt.JwtUtils;
+import com.example.equipmentmanagement.repository.CodeRepository;
 import com.example.equipmentmanagement.repository.RoleRepository;
 import com.example.equipmentmanagement.repository.UserRepository;
+import com.example.equipmentmanagement.service.EmailSenderService;
+import com.example.equipmentmanagement.service.ResponseImpl;
 import com.example.equipmentmanagement.service.UserDetailsImpl;
 import com.example.equipmentmanagement.service.UserDetailsServiceImpl;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,6 +51,12 @@ public class AuthController {
     AuthTokenFilter authTokenFilter;
     @Autowired
     UserDetailsServiceImpl userDetailsService;
+    @Autowired
+    ResponseImpl responseService;
+    @Autowired
+    CodeRepository codeRepository;
+    @Autowired
+    EmailSenderService emailSenderService;
 
     @Autowired
     private AmazonClient amazonClient;
@@ -220,7 +231,8 @@ public class AuthController {
                             null
                     ));
         }
-        String username = jwtUtils.getUserNameFromJwtToken(jwt);try {
+        String username = jwtUtils.getUserNameFromJwtToken(jwt);
+        try {
             Optional<User> userOptional = userRepository.findByUsername(username);
             if (userOptional.isEmpty()) {
                 return ResponseEntity.badRequest().body(
@@ -293,5 +305,55 @@ public class AuthController {
             return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+    @PostMapping("/forgot-password/send")
+    public ResponseEntity<?> sendEmailForgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+        String email = forgotPasswordRequest.getEmail();
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (userOptional.isEmpty()) {
+            return responseService.badRequest("User not found!");
+        }
+        try {
+            User user = userOptional.get();
+            Code code = new Code();
+            String randomCode = RandomStringUtils.randomNumeric(6);
+            code.setCode(randomCode);
+            code.setUser(user);
+            code.setUsed(false);
+            codeRepository.save(code);
+            emailSenderService.sendEmail(forgotPasswordRequest.getEmail(), "Verify Forgot Password Email", randomCode);
+            return responseService.success("Send code successful!", code);
+        } catch (Exception e) {
+            return responseService.badRequest(e.getMessage());
+        }
+    }
+
+    @PostMapping("/forgot-password/verify")
+    public ResponseEntity<?> verifyCode(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+        Optional<User> userOptional = userRepository.findByEmail(forgotPasswordRequest.getEmail());
+        if (userOptional.isEmpty()) {
+            return responseService.badRequest("User not found!");
+        }
+        try {
+            User user = userOptional.get();
+            Optional<Code> codeOptional = codeRepository.findTopByUserAndCodeAndUsedIsFalseOrderByIdDesc(user, forgotPasswordRequest.getCode());
+            if (codeOptional.isEmpty()) {
+                return responseService.badRequest("Verify Failed! Invalid code!");
+            }
+            if (!Objects.equals(forgotPasswordRequest.getNewPassword(), forgotPasswordRequest.getRePassword())) {
+                return responseService.badRequest("Password not match!");
+            }
+            user.setPassword(encoder.encode(forgotPasswordRequest.getNewPassword()));
+            userRepository.save(user);
+
+            Code code = codeOptional.get();
+            code.setUsed(true);
+            codeRepository.save(code);
+
+            return responseService.success("Verified Successful!", code);
+        } catch (Exception e) {
+            return responseService.badRequest(e.getMessage());
+        }
     }
 }
