@@ -333,7 +333,7 @@ public class AuthController {
     public ResponseEntity<?> verifyCode(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
         Optional<User> userOptional = userRepository.findByEmail(forgotPasswordRequest.getEmail());
         if (userOptional.isEmpty()) {
-            return responseService.badRequest("User not found!");
+            return responseService.badRequest("Verify Failed! User not found!");
         }
         try {
             User user = userOptional.get();
@@ -342,7 +342,7 @@ public class AuthController {
                 return responseService.badRequest("Verify Failed! Invalid code!");
             }
             if (!Objects.equals(forgotPasswordRequest.getNewPassword(), forgotPasswordRequest.getRePassword())) {
-                return responseService.badRequest("Password not match!");
+                return responseService.badRequest("Verify Failed! Password not match!");
             }
             user.setPassword(encoder.encode(forgotPasswordRequest.getNewPassword()));
             userRepository.save(user);
