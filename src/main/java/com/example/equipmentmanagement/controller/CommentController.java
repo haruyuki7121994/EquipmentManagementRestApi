@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,8 @@ public class CommentController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size,
             @RequestParam(defaultValue = "id-desc") String orderBy,
-            @RequestParam(defaultValue = "") String username
+            @RequestParam(defaultValue = "") String username,
+            @RequestParam(defaultValue = "") String date
     ) {
         try {
             List<Comment> comments;
@@ -56,7 +58,12 @@ public class CommentController {
             Optional<User> userOptional = userRepository.findByUsername(username);
             if (userOptional.isEmpty()) {
                 pageComments = repository.findAll(paging);
-            } else {
+            } else if (date.equals("last-week")) {
+                LocalDateTime localDateTime = LocalDateTime.now().minusDays(7);
+                Timestamp lastWeek = Timestamp.valueOf(localDateTime);
+                pageComments = repository.findAllByCreatedAtGreaterThanEqual(lastWeek, paging);
+            }
+            else {
                 User user = userOptional.get();
                 pageComments = repository.getByUser(user, paging);
             }

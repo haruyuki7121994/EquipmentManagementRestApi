@@ -1,5 +1,6 @@
 package com.example.equipmentmanagement.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.*;
@@ -45,10 +46,12 @@ public class BulkEquipmentLog {
 
     @Basic
     @Column(name = "created_at", nullable = false)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createdAt;
 
     @Basic
     @Column(name = "completed_at", nullable = true)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp completedAt;
 
     @Override

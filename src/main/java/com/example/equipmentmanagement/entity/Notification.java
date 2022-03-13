@@ -1,5 +1,6 @@
 package com.example.equipmentmanagement.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -34,6 +35,7 @@ public class Notification {
 
     @Basic
     @Column(name = "created_at", nullable = false, length = 255)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

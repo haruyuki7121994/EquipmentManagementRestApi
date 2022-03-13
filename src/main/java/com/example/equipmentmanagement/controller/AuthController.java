@@ -83,7 +83,7 @@ public class AuthController {
         }
         // Create new user's account
         User user = new User();
-        user.setId("user-" + new Timestamp(System.currentTimeMillis()).getTime());
+        user.setId(new Timestamp(System.currentTimeMillis()).getTime() + "user-");
         user.setUsername(signUpRequest.getUsername());
         user.setEmail(signUpRequest.getEmail());
         user.setPassword(encoder.encode(signUpRequest.getPassword()));
@@ -137,6 +137,7 @@ public class AuthController {
                 .map(item -> item.getAuthority())
                 .collect(Collectors.toList());
         JWTResponse jwtResponse = new JWTResponse(jwt,
+                "Bearer",
                 userDetails.getId(),
                 userDetails.getUsername(),
                 userDetails.getEmail(),

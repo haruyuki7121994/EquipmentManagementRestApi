@@ -1,5 +1,6 @@
 package com.example.equipmentmanagement.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.annotations.OnDelete;
@@ -37,6 +38,7 @@ public class Maintenance {
     private int repeatedType;
 
     @Column(name = "created_at", nullable = true)
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Timestamp createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

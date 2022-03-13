@@ -82,8 +82,8 @@ public class BulkEquipmentService implements BulkEquipmentImpl{
                     Equipment rs = equipmentService.handleSave(request, category);
                     if (rs != null && images != null) {
                         images.forEach(img -> imageService.handleSave(rs, img));
-                        count.incrementAndGet();
                     }
+                    count.incrementAndGet();
 
                     if (count.get() % 10 == 0) {
 //                        log.info("Created: {}", count.get());
