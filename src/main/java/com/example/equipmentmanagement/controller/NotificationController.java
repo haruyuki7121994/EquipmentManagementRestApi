@@ -87,7 +87,7 @@ public class NotificationController {
             notification.setRead(false);
             notification.setTitle(notificationRequest.getTitle());
             notification.setDescription(notificationRequest.getDescription());
-            notification.setCreatedAt(new Date(timestamp.getTime()));
+            notification.setCreatedAt(timestamp);
             notification.setMaintenance(maintenance);
             repository.save(notification);
             return responseService.success("Create successful!", notification);

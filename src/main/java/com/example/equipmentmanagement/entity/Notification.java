@@ -7,6 +7,7 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Getter
@@ -33,7 +34,7 @@ public class Notification {
 
     @Basic
     @Column(name = "created_at", nullable = false, length = 255)
-    private Date createdAt;
+    private Timestamp createdAt;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "maintenance_id", nullable = false)

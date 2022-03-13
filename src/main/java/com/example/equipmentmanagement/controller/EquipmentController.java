@@ -10,6 +10,7 @@ import com.example.equipmentmanagement.service.ImageImpl;
 import com.example.equipmentmanagement.service.PagingImpl;
 import com.example.equipmentmanagement.service.ResponseImpl;
 import com.google.gson.Gson;
+import org.apache.commons.lang.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.sql.Timestamp;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -237,6 +239,27 @@ public class EquipmentController {
         logRepository.save(log);
 
         return responseService.success("Log Created Successful!", null);
+    }
+
+    @PostMapping(value = "/qrcode/check")
+    public ResponseEntity<?> checkListQrcode(@RequestBody EquipmentRequest equipmentRequest) {
+        try {
+            List<String> list = equipmentRequest.getQrcodeList();
+            Set<Equipment> validEquipments = equipmentRepository.findAllByQrcodeIn(list);
+            List<String> validQrcode = new ArrayList<>();
+            for (String qrcode :list) {
+                Equipment e = validEquipments.stream()
+                        .filter(equipment -> qrcode.equals(equipment.getQrcode()))
+                        .findAny()
+                        .orElse(null);
+                if (e == null) {
+                    validQrcode.add(qrcode);
+                }
+            }
+            return responseService.success("Check successful!", validQrcode);
+        } catch (Exception e) {
+            return responseService.badRequest(e.getMessage());
+        }
     }
 
     private void uploadImage(MultipartFile[] files, Equipment equipment) {
