@@ -19,8 +19,11 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class ScheduledTasks {
@@ -37,7 +40,7 @@ public class ScheduledTasks {
     @Autowired
     NotificationRepository notificationRepository;
 
-    @Scheduled(fixedRate = 5 * 60 * 1000)
+    @Scheduled(fixedRate = 60 * 1000)
     public void executeBulkEquipment() {
         log.info("The time is now {}", dateFormat.format(new Date()));
         BulkEquipmentLog bulkEquipmentlog = bulkEquipmentRepository.findByStatus(0);
@@ -56,7 +59,7 @@ public class ScheduledTasks {
         List<Maintenance> maintenances = maintenanceRepository.findAllByDateMaintenanceGreaterThanEqual(new java.sql.Date(System.currentTimeMillis()));
         for (Maintenance maintenance :
                 maintenances) {
-            if (maintenance.getStatus() == 0) continue;
+            if (maintenance.getStatus() == 0 || maintenance.getStatus() == 2) continue;
 
             Notification notification = new Notification();
             notification.setRead(false);
@@ -69,8 +72,27 @@ public class ScheduledTasks {
 
             if (!maintenance.getRepeatable()) {
                 maintenance.setStatus(2);
-                maintenanceRepository.save(maintenance);
+            } else {
+                maintenance.setLastdateMaintenance(maintenance.getDateMaintenance());
+                LocalDate date = maintenance.getDateMaintenance().toLocalDate();
+                switch (maintenance.getRepeatedType()) {
+                    case 0:
+                        date = date.plusDays(7);
+                        break;
+                    case 1:
+                        date = date.plusMonths(1);
+                        break;
+                    case 2:
+                        date = date.plusMonths(3);
+                        break;
+                    case 3:
+                        date = date.plusYears(1);
+                        break;
+                    default: return;
+                }
+                maintenance.setDateMaintenance(java.sql.Date.valueOf(date));
             }
+            maintenanceRepository.save(maintenance);
         }
 
     }

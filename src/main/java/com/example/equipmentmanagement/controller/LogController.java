@@ -2,18 +2,22 @@ package com.example.equipmentmanagement.controller;
 
 import com.example.equipmentmanagement.entity.BulkEquipmentLog;
 import com.example.equipmentmanagement.entity.Comment;
+import com.example.equipmentmanagement.entity.Equipment;
 import com.example.equipmentmanagement.repository.BulkEquipmentRepository;
+import com.example.equipmentmanagement.repository.CommentRepository;
+import com.example.equipmentmanagement.repository.EquipmentRepository;
 import com.example.equipmentmanagement.service.PagingImpl;
 import com.example.equipmentmanagement.service.ResponseImpl;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -25,6 +29,11 @@ public class LogController {
     PagingImpl pagingService;
     @Autowired
     BulkEquipmentRepository repository;
+    @Autowired
+    EquipmentRepository equipmentRepository;
+    @Autowired
+    CommentRepository commentRepository;
+
     @GetMapping("/all")
     public ResponseEntity<?> all(
             @RequestParam(defaultValue = "0") int page,
@@ -57,6 +66,32 @@ public class LogController {
             Map<String, Object> metadata = pagingService.getMetadata(paginator);
 
             return responseService.successWithPaging(metadata, response);
+        } catch (Exception e) {
+            return responseService.badRequest(e.getMessage());
+        }
+    }
+
+    @PostMapping("/rollback/{id}")
+    public ResponseEntity<?> rollback(@PathVariable("id") int id) {
+        Optional<BulkEquipmentLog> logOptional = repository.findById(id);
+        if (logOptional.isEmpty()) {
+            return responseService.notFound();
+        }
+
+        BulkEquipmentLog log = logOptional.get();
+        try {
+            Type listType = new TypeToken<List<String>>() {}.getType();
+            List<String> qrcodeList = new Gson().fromJson(log.getQrcodeList(), listType);
+            Set<Equipment> equipments = equipmentRepository.findAllByQrcodeIn(qrcodeList);
+            for (Equipment e: equipments) {
+                Set<Comment> comments = e.getComments();
+                if (comments.size() == 0) continue;
+                commentRepository.deleteAll(comments);
+            }
+            equipmentRepository.deleteAll(equipments);
+            log.setStatus(2);
+            repository.save(log);
+            return responseService.success("Rollback successful!", log);
         } catch (Exception e) {
             return responseService.badRequest(e.getMessage());
         }
