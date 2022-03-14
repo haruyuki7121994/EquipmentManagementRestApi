@@ -56,7 +56,7 @@ public class ScheduledTasks {
     @Scheduled(fixedRate = 86400 * 1000)
     public void executeMaintenance() {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        List<Maintenance> maintenances = maintenanceRepository.findAllByDateMaintenanceGreaterThanEqual(new java.sql.Date(System.currentTimeMillis()));
+        List<Maintenance> maintenances = maintenanceRepository.findAllByDateMaintenance(new java.sql.Date(System.currentTimeMillis()));
         for (Maintenance maintenance :
                 maintenances) {
             if (maintenance.getStatus() == 0 || maintenance.getStatus() == 2) continue;

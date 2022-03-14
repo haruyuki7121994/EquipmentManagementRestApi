@@ -108,3 +108,6 @@ create table codes
 INSERT INTO roles(name) VALUES('ROLE_ADMIN');
 INSERT INTO roles(name) VALUES('ROLE_MAINTAINER');
 INSERT INTO roles(name) VALUES('ROLE_GUEST');
+
+INSERT INTO users(id, username, email, password, is_active) VALUES('0-admin', 'admin', 'admin@gmail.com', '$2a$10$QlHXEZ7mgoZo/gYD6cxLWOu0RQ/xcr9zgW.Cd6iYln92M45aoY7P6', 1);
+INSERT INTO user_roles(user_id, role_id) VALUES ('0-admin', 1)
