@@ -65,7 +65,7 @@ public class ScheduledTasks {
             notification.setRead(false);
             notification.setMaintenance(maintenance);
             notification.setDescription("Today is maintenance day! Please check the maintenance schedule!");
-            notification.setTitle(maintenance.getId() + "notification");
+            notification.setTitle("Auto notification");
             notification.setCreatedAt(timestamp);
             notification.setId(timestamp.getTime() + "-notification");
             notificationRepository.save(notification);
