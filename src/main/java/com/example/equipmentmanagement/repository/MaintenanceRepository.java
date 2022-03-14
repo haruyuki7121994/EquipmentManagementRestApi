@@ -12,5 +12,6 @@ import java.util.List;
 public interface MaintenanceRepository extends JpaRepository<Maintenance, String> {
     Page<Maintenance> findAllByDateMaintenanceGreaterThanEqualAndDateMaintenanceLessThanEqual(Date dateMaintenance, Date dateMaintenance2, Pageable pageable);
     Page<Maintenance> getByUser(User user, Pageable pageable);
+    Page<Maintenance> findAllByUserAndDateMaintenanceGreaterThanEqualAndDateMaintenanceLessThanEqual(User user, Date dateMaintenance, Date dateMaintenance2, Pageable pageable);
     List<Maintenance> findAllByDateMaintenance(Date dateMaintenance);
 }

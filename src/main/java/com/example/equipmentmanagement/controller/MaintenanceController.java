@@ -62,7 +62,17 @@ public class MaintenanceController {
             Optional<User> maintainerOptional = userRepository.findByUsername(username);
             if (maintainerOptional.isPresent()) {
                 User user = maintainerOptional.get();
-                pageMaintenance = repository.getByUser(user, paging);
+                if (startDate.isEmpty() || endDate.isEmpty()) {
+                    pageMaintenance = repository.getByUser(user, paging);
+                } else {
+                    pageMaintenance = repository.findAllByUserAndDateMaintenanceGreaterThanEqualAndDateMaintenanceLessThanEqual(
+                            user,
+                            new Date(new SimpleDateFormat("yyyy-MM-dd").parse(startDate).getTime()),
+                            new Date(new SimpleDateFormat("yyyy-MM-dd").parse(endDate).getTime()),
+                            paging
+                    );
+                }
+
             } else {
                 if (startDate.isEmpty() || endDate.isEmpty()) {
                     pageMaintenance = repository.findAll(paging);

@@ -53,7 +53,7 @@ public class ScheduledTasks {
 
     }
 
-    @Scheduled(fixedRate = 86400 * 1000)
+    @Scheduled(fixedRate = 5 * 60 * 1000)
     public void executeMaintenance() {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         List<Maintenance> maintenances = maintenanceRepository.findAllByDateMaintenance(new java.sql.Date(System.currentTimeMillis()));
