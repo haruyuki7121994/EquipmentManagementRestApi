@@ -220,6 +220,42 @@ public class AuthController {
 
     }
 
+    @PostMapping("/edit/email")
+    public ResponseEntity<?> changeEmail(HttpServletRequest request, @Valid @RequestBody UserRequest userRequest) {
+        String jwt = authTokenFilter.parseJwt(request);
+        if (jwt == null || !jwtUtils.validateJwtToken(jwt)) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse(
+                            HttpStatus.BAD_REQUEST.value(),
+                            "Invalid access token",
+                            null
+                    ));
+        }
+        String username = jwtUtils.getUserNameFromJwtToken(jwt);
+        Optional<User> userOptional = userRepository.findByUsername(username);
+        if (userOptional.isEmpty()) {
+            return ResponseEntity.badRequest().body(
+                    new MessageResponse(
+                            HttpStatus.BAD_REQUEST.value(),
+                            "User not found",
+                            null
+                    )
+            );
+        }
+        try {
+            User user = userOptional.get();
+            if (userRepository.existsByEmail(userRequest.getEmail())) {
+                return responseService.badRequest("Email is existed!");
+            }
+            user.setEmail(userRequest.getEmail());
+            userRepository.save(user);
+            return responseService.success("Update Email successful!", user);
+        } catch (Exception e) {
+            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @PostMapping("/edit/password")
     public ResponseEntity<?> changePassword(HttpServletRequest request, @Valid @RequestBody UserRequest userRequest) {
         String jwt = authTokenFilter.parseJwt(request);
