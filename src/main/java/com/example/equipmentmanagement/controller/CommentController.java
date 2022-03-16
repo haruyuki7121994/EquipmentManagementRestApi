@@ -139,7 +139,7 @@ public class CommentController {
 
         try {
             Comment comment = new Comment();
-            comment.setId("cmt-" + new Timestamp(System.currentTimeMillis()).getTime());
+            comment.setId(new Timestamp(System.currentTimeMillis()).getTime() + "cmt-");
             comment.setTitle(commentRequest.getTitle());
             comment.setDescription(commentRequest.getDescription());
             comment.setCreatedAt(new Timestamp(System.currentTimeMillis()));
