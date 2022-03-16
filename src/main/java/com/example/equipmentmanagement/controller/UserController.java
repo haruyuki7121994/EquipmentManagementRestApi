@@ -1,10 +1,8 @@
 package com.example.equipmentmanagement.controller;
 
 import com.example.equipmentmanagement.dto.*;
-import com.example.equipmentmanagement.entity.ERole;
-import com.example.equipmentmanagement.entity.Maintenance;
-import com.example.equipmentmanagement.entity.Role;
-import com.example.equipmentmanagement.entity.User;
+import com.example.equipmentmanagement.entity.*;
+import com.example.equipmentmanagement.repository.CommentRepository;
 import com.example.equipmentmanagement.repository.RoleRepository;
 import com.example.equipmentmanagement.repository.UserRepository;
 import com.example.equipmentmanagement.service.ResponseImpl;
@@ -34,6 +32,8 @@ public class UserController {
     PasswordEncoder encoder;
     @Autowired
     ResponseImpl responseService;
+    @Autowired
+    CommentRepository commentRepository;
 
     @GetMapping("/all")
     public ResponseEntity<?> all(
@@ -197,10 +197,14 @@ public class UserController {
             Set<Maintenance> maintenances = user.getMaintenances();
             if (maintenances.size() > 0) return responseService.badRequest("Delete failed!");
 
+            Set<Comment> comments = user.getComments();
+            if (comments.size() > 0) commentRepository.deleteAll(comments);
+
             repository.delete(user);
             return responseService.success("Delete successful!", null);
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return responseService.badRequest(e.getMessage());
+//            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 }

@@ -53,4 +53,8 @@ public class User {
     @OneToMany(mappedBy="user")
     @JsonIgnore
     private Set<Maintenance> maintenances;
+
+    @OneToMany(mappedBy = "user")
+    @JsonIgnore
+    private Set<Comment> comments;
 }
